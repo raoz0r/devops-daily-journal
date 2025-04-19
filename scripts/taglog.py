@@ -125,6 +125,25 @@ def process_file(path):
 
     log_event('info', 'tag_injected', file_name, tags=inline_tags)
 
+def finalize_daily_log():
+    """
+    Ensure a single daily_log_finalized entry for today's file.
+    """
+    today = datetime.now().strftime("%d-%m-%Y")
+    filename = f"{today}.md"
+    marker = f"event=daily_log_finalized file={filename}"
+    exists = False
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE) as f:
+            for line in f:
+                if marker in line:
+                    exists = True
+                    break
+    if not exists:
+        iso_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        with open(LOG_FILE, 'a') as logf:
+            logf.write(f"{iso_ts} level=info event=daily_log_finalized file={filename}\n")
+
 
 def main():
     now = time.time()
@@ -139,6 +158,8 @@ def main():
                     process_file(fpath)
             except Exception:
                 log_event('warn', 'tag_skipped', fname, reason='mtime_error')
+    # Finalize daily log entry
+    finalize_daily_log()
 
 
 if __name__ == '__main__':
