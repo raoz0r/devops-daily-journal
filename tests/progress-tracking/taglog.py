@@ -14,8 +14,8 @@ import yaml
 from datetime import datetime
 
 # Configuration
-TARGET_DIR = "/mnt/storage/GoogleDrive/02-areas/progress-tracking"
-LOG_FILE = "/mnt/storage/logs/taglog.log"
+TARGET_DIR = "/mnt/storage/keys-scripts/devops-daily-journal/tests/progress-tracking" # This is a test directory for the script. In production, this should be set to the actual target directory.
+LOG_FILE = "/mnt/storage/logs/taglog-test.log" # This is a test log file for the script. In production, this should be set to the actual log file.
 ONE_DAY = 86400  # seconds
 
 
