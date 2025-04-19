@@ -1,5 +1,5 @@
 #!/bin/bash
-TODAY=$(date +"%d.%m.%Y")
+TODAY=$(date +"%d-%m-%Y")
 FILENAME="$TODAY.md"
 LOG_FILE="/mnt/storage/logs/taglog.log"
 
@@ -18,7 +18,7 @@ cat << EOF > "$FILENAME"
 
 ## 👨🏽‍💻 Troubleshooting 🕵️
 
-## 🧰 Tools 📓 📝
+## 🧰 Tools 📓 📝 <!-- markdownlint-disable MD024 -->
 
 ### 📓 Bash Script Heading Sample
 
