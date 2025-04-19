@@ -150,10 +150,7 @@ def finalize_daily_log():
                     exists = True
                     break
     if not exists:
-        iso_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-        with open(LOG_FILE, 'a') as logf:
-            logf.write(f"{iso_ts} level=info event=daily_log_finalized file={filename}\n")
-
+        log_event('info', 'daily_log_finalized', filename)
 
 def main():
     now = time.time()

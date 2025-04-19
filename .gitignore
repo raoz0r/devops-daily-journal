@@ -1,1 +1,5 @@
-logs/taglog.log
+# Ignore all .log files in the entire repo
+*.log
+
+# Ignore all .md files only in /tests/ directory (and subdirs)
+tests/**/*.md
