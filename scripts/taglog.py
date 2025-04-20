@@ -12,7 +12,7 @@ import yaml
 from datetime import datetime
 
 # Configuration
-TARGET_DIR = "/mnt/storage/GoogleDrive/02-areas/progress-tracking"
+TARGET_DIR = os.getcwd()
 LOG_FILE = "/mnt/storage/logs/taglog.log"
 ONE_DAY = 86400  # seconds
 
@@ -118,7 +118,7 @@ def process_file(path):
     if len(lines) < 3:
         log_event('warn', 'tag_skipped', file_name, reason='no_tags_found')
         return
-    inline_tags = re.findall(r"#([\w-]+)", lines[2])
+    inline_tags = re.findall(r"#([\w-]+(?:/[\w-]+)*)", lines[2])
     if not inline_tags:
         log_event('warn', 'tag_skipped', file_name, reason='no_tags_found')
         return
