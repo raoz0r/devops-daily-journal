@@ -4,8 +4,6 @@
 # level=<log_level> event=<event_name> file=<file_name> [reason=<reason>] [tags=<tags>]
 # Example: level=warn event=tag_skipped file=example.md reason=malformed_front_matter
 
-#!/usr/bin/env python3
-
 import os
 import sys
 import re
@@ -64,6 +62,7 @@ def build_frontmatter(tags):
     """
     Build a YAML front matter string given a list of tags.
     """
+    # tags ordering for frontmatter can remain as-is or be sorted if desired
     doc = {'tags': tags}
     yaml_content = yaml.dump(doc, default_flow_style=False, sort_keys=False, indent=2).strip() + '\n'
     return '---\n' + yaml_content + '---\n\n'
@@ -85,12 +84,13 @@ def log_event(level, event, file_name, reason=None, tags=None):
     if reason:
         components.append(f"reason={reason}")
     if tags is not None:
-        components.append(f"tags={','.join(tags)}")
+        # Sort tags to ensure consistent ordering in logs
+        sorted_tags = sorted(tags)
+        components.append(f"tags={','.join(sorted_tags)}")
     timestamp = datetime.now().isoformat()
     entry = f"{timestamp} " + " ".join(components)
     with open(LOG_FILE, 'a') as logf:
         logf.write(entry + '\n')
-
 
 
 def process_file(path):
@@ -134,6 +134,7 @@ def process_file(path):
         return
 
     log_event('info', 'tag_injected', file_name, tags=inline_tags)
+
 
 def finalize_daily_log():
     """
