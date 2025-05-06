@@ -17,21 +17,21 @@ Example: level=info event=tag_injected file=example.md tags=devops,grafana,loki,
 
 ### Folder Structure
 
-devops-daily-journal/
-├── README.md
-├── LICENSE
+devops-daily-journal/  
+├── README.md  
+├── LICENSE  
 ├── scripts/
-│   ├── newlog.py         # generates daily log files
-│   └── taglog.py         # detects tag changes and logs them
-├── bin/
-│   ├── newlog            # optional symlink to scripts/newlog.py
-│   └── taglog            # optional symlink to scripts/taglog.py
-├── logs/
-│   └── taglog.log        # default output (append-only, not versioned)
-├── tests/
-│   └── test_taglog.py    # placeholder for future testing
-├── requirements.txt
-└── .gitignore
+│   ├── newlog.py         # generates daily log files  
+│   └── taglog.py         # detects tag changes and logs them  
+├── bin/  
+│   ├── newlog            # optional symlink to scripts/newlog.py  
+│   └── taglog            # optional symlink to scripts/taglog.py  
+├── logs/  
+│   └── taglog.log        # default output (append-only, not versioned)  
+├── tests/  
+│   └── test_taglog.py    # placeholder for future testing  
+├── requirements.txt  
+└── .gitignore  
 
 ## 📓 Taglog Script
 
