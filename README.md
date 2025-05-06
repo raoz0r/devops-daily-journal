@@ -20,7 +20,7 @@ Example: level=info event=tag_injected file=example.md tags=devops,grafana,loki,
 devops-daily-journal/  
 ├── README.md  
 ├── LICENSE  
-├── scripts/
+├── scripts/  
 │   ├── newlog.py         # generates daily log files  
 │   └── taglog.py         # detects tag changes and logs them  
 ├── bin/  
