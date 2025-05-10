@@ -1,97 +1,87 @@
-# DevOps Daily Journal 🛠📓
 
-A personal logging system for developers, engineers, and chaotic creators who want to track their work, ideas, and system configs in structured Markdown — and keep everything observably tagged and searchable in Obsidian
+# DevOps Daily Journal (Archived)
+
+> ⚠️ This project is no longer actively maintained. Although the core functionality remains operational, it has been deprecated in favor of a more integrated and sustainable solution using native Obsidian plugins.
+
+## Project Summary
+
+**DevOps Daily Journal** was developed as a lightweight, script-driven logging system aimed at engineers, developers, and creators who prefer Markdown-based workflows. It offered a CLI-friendly way to generate structured daily logs and manage metadata tags automatically — all while staying compatible with [Obsidian](https://obsidian.md/), a Markdown knowledge base tool.
+
+This documentation outlines its core features, functionality, and how it supports observability within personal knowledge systems.
 
 ## Features
 
-- 📝 Generate pre-formatted daily log templates
-- 🧠 Automatically inject metadata tags into Obsidian-compatible headers
-- 🛡 Detect and log tag updates to track content drift over time
-- 🧰 CLI friendly — build into your cron rituals
+* 📝 Generate pre-formatted daily log templates
+* 🧠 Auto-inject metadata tags into Obsidian-compatible YAML front matter
+* 🛡 Track tag updates over time to monitor content drift
+* 🧰 Fully CLI-compatible — suitable for automation with cron
 
-### Log message format
+---
 
-level=`<log_level>` event=`<event_name>` file=`<file_name>` [reason=`<reason>`] [tags=`<tags>`]
-Example: level=warn event=tag_skipped file=example.md reason=malformed_front_matter
-Example: level=info event=tag_injected file=example.md tags=devops,grafana,loki,promtail
+## System Behavior
 
-### Folder Structure
+### Log Format
 
-devops-daily-journal/  
-├── README.md  
-├── LICENSE  
-├── scripts/  
-│   ├── newlog.py         # generates daily log files  
-│   └── taglog.py         # detects tag changes and logs them  
-├── bin/  
-│   ├── newlog            # optional symlink to scripts/newlog.py  
-│   └── taglog            # optional symlink to scripts/taglog.py  
-├── logs/  
-│   └── taglog.log        # default output (append-only, not versioned)  
-├── tests/  
-│   └── test_taglog.py    # placeholder for future testing  
-├── requirements.txt  
-└── .gitignore  
+Each operation logs a structured message to `taglog.log`:
 
-## 📓 Taglog Script
+```
+level=<log_level> event=<event_name> file=<file_name> [reason=<reason>] [tags=<tags>]
+```
+
+**Examples:**
+
+```
+level=warn event=tag_skipped file=example.md reason=malformed_front_matter
+level=info event=tag_injected file=example.md tags=devops,grafana,loki,promtail
+```
+
+---
+
+## Folder Structure
+
+```
+devops-daily-journal/
+├── README.md
+├── LICENSE
+├── scripts/
+│   ├── newlog.py          # creates daily log entries
+│   └── taglog.py          # manages and tracks metadata tags
+├── bin/
+│   ├── newlog             # optional symlink to newlog.py
+│   └── taglog             # optional symlink to taglog.py
+├── logs/
+│   └── taglog.log         # default log output
+├── tests/
+│   └── test_taglog.py     # test placeholder
+├── requirements.txt
+└── .gitignore
+```
+
+---
+
+## `taglog.py`: Tag Management
 
 ### Purpose
 
-Automatically manage and update metadata tags in Obsidian-compatible Markdown files.  
-This script injects YAML front matter based on inline hashtags and tracks any changes in a centralized log, supporting structured observability for personal logs or DevOps documentation.
+Automates metadata tag injection and drift tracking for Markdown notes using Obsidian’s front matter system.
 
 ### Key Features
 
-#### 1. Automatic File Naming
+1. **File Detection**: Scans for `.md` files modified in the past 24 hours
+2. **Tag Injection**: Parses inline hashtags (from line 3), adds them to YAML front matter if missing
+3. **Structured Logging**: Logs every action to `taglog.log` using a clear and consistent format
+4. **CLI Integration**: Ideal for cronjobs, pipelines, or automation environments
 
-- Operates on `.md` files modified in the last 24 hours within a specified directory.
+### Example Workflow
 
-#### 2. Pre-Filled Template
-
-- If no YAML front matter is present, it extracts inline `#tags` from line 3 and injects them as a properly formatted YAML list.
-
-#### 3. Logging
-
-- Appends structured log entries to `taglog.log` for every operation:
-  - `tag_injected` for newly created tags
-  - `tag_updated` when tags change
-  - `tag_skipped` when skipping malformed or untaggable files
-
-#### 4. Integration with CLI
-
-- Can be used in cron jobs or shell scripts with no external interaction.
-- Simple to integrate into pipelines or other automation workflows.
-
-### Workflow
-
-#### 1. File Creation
-
-- Walks the target directory recursively.
-- Identifies markdown files modified in the last 24 hours.
-
-#### 2. Logging the Event
-
-- Logs follow this format:  
-  `level=<level> event=<event> file=<file_name> [reason=<reason>] [tags=<tags>]`
-
-- Example:  
-  `2025-04-19T13:00:00 level=info event=tag_injected file=19-04-2025.md tags=docker,devops,loki`
-
-#### 3. User Notification
-
-- No terminal output unless integrated with other scripts — logging happens silently.
-- Errors are logged instead of thrown to the user.
-
-#### Example Use Case
-
-You’ve written a daily log in Obsidian and added inline hashtags like:
+Given a Markdown file without front matter:
 
 ```markdown
 # 19.04.2025  
 #docker #grafana #promtail
 ```
 
-The script will detect no front matter, extract the hashtags, and transform your file into:
+The script will transform it into:
 
 ```markdown
 ---
@@ -105,25 +95,38 @@ tags:
 #docker #grafana #promtail
 ```
 
-A log entry is created:
+And log the event:
 
-```log
+```
 2025-04-19T13:00:00 level=info event=tag_injected file=19-04-2025.md tags=docker,grafana,promtail
 ```
 
-### Notes
+---
 
-- Uses **PyYAML** for parsing and formatting.
-- Will **not** overwrite existing tag entries unless malformed.
-- Validates tag changes by comparing current YAML with the latest log entry.
-- Rejects files with:
-  - No tags
-  - Invalid or malformed YAML
-  - Errors during read/write
-- Aimed at **personal observability**, not enterprise-scale nonsense
+## Notes & Limitations
 
-## Why?
+* Uses `PyYAML` for YAML parsing
+* Will not overwrite valid tag metadata
+* Rejects files with:
 
-Because Bash is a liar and metadata deserves better.
-> I didn't want a journal.
-> I wanted observability for his soul.
+  * No hashtags
+  * Invalid YAML
+  * Read/write errors
+* Errors are logged silently; there is no terminal output by default
+* Designed for personal usage, not enterprise-level systems
+
+---
+
+## Rationale
+
+This tool was created out of frustration with the lack of structured metadata management in traditional journaling workflows. Rather than keeping disorganized notes, the author envisioned a system that allowed visibility into the "state" of thought and logs — similar to observability in distributed systems.
+
+> “I didn’t want a journal. I wanted observability for his soul.”
+
+That vision has since been surpassed by native plugin solutions in Obsidian, making this script a valuable but now archived utility.
+
+---
+
+## License
+
+This project is open for educational and personal use. No specific license applies.
